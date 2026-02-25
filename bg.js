@@ -18,7 +18,7 @@ class layer{
             this.x-= this.game.speed * this.speedModifier;
     }
     draw(cxt){
-        cxt.drawImage(this.image,0,0,this.SpriteWdth,this.spriteHeight,this.x,this.y,this.width,this.height);
+        cxt.drawImage(this.image,this.x,this.y,this.width,this.height);
         cxt.drawImage(this.image,this.x+this.width-this.game.speed ,this.y,this.width,this.height)
 
     }

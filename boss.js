@@ -1,4 +1,4 @@
-import { Attack, Spell, Cast, Hurt, Idle } from "./bossStates.js";
+import { Attack, Spell, Cast, Hurt, Idle, Appear, Vanish } from "./bossStates.js";
 
 export class Boss{
     constructor(game, player){
@@ -53,32 +53,34 @@ export class Boss{
             document.querySelector('.idle7'),
             document.querySelector('.idle8'),
         ];
+        this.appear= [document.querySelector('.appear1'),
+            document.querySelector('.appear2'),
+            document.querySelector('.appear3'),
+            document.querySelector('.appear4'),
+            document.querySelector('.appear5'),
+            document.querySelector('.appear6'),
+            document.querySelector('.appear7'),
+            document.querySelector('.appear8'),
+        ];
         this.hurt=[
             document.querySelector('.hurt1'),
             document.querySelector('.hurt2'),
             document.querySelector('.hurt3'),
         ];
-        this.death= [];
         this.spriteW= 420;
         this.spriteH= 279;
         this.x= this.game.width- this.spriteW;
         this.y= this.game.height- this.spriteH- 35;
         this.complete= false;
         this.danger= false;
-        this.stunned= false;
         this.backup= false;
         //states
         this.options= [0,2];
-        this.states= [new Attack(this, this.attack, player), new Spell(this, this.spell, player), new Cast(this, this.cast, player), new Hurt(this, this.hurt, player), new Idle(this,this.idle,player)];
-        this.currentState= this.states[this.options[Math.floor(Math.random()* this.options.length)]];
+        this.states= [new Attack(this, this.attack, player), new Spell(this, this.spell, player), new Cast(this, this.cast, player), new Hurt(this, this.hurt, player), new Idle(this,this.idle), new Appear(this, this.appear), new Vanish(this, this.appear, this.player)];
+        this.currentState= this.states[5];
+        this.currentState.enter();
         this.backupState= []; //for idle
-
-        if(this.currentState== this.states[2]){
-            this.game.bossMsgNo= 1;
-            this.game.paused= true;
-            this.game.speed= 0;
-            this.game.player.setState(0,0,document.querySelector('#idle'));
-        }else this.game.bossMsgNo= 0;
+        //to stop player when boss arives
         //collision
         this.collisionX=0;
         this.collisionY=0;  
@@ -89,7 +91,10 @@ export class Boss{
         this.idleY= (this.game.height- this.spriteH- 35)+ this.spriteH/3.7;  
         this.idleW= this.spriteW/4;
         this.idleH= this.spriteH/1.5;
-        this.hit= false;
+        this.allowHit= true;
+        //appearing animation
+        this.appearingFramesX= 7;
+        this.appearingMaxFrames= 0;
     }
     update(deltaTime){
         this.currentState.update(deltaTime);
@@ -103,6 +108,11 @@ export class Boss{
         if(this.backup){
             this.backupState.draw(cxt);
         }
+    }
+    setState(stateNo){
+        this.currentState.sound.pause();
+        this.currentState= this.states[stateNo];
+        this.currentState.enter();
     }
     
 }

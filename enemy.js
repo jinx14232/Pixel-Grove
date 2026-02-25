@@ -115,8 +115,12 @@ export class bat extends Enemy{
 class stun{
     constructor(enemy){
         this.enemy= enemy;
+        // this.sound= new Audio();
+        // this.sound.src="shield_touch.mp3";
     }
     enter(){
+        // this.sound.currentTime= 0;
+        // this.sound.play();
         this.enemy.framesX= 0;
         this.enemy.maxFrames= this.enemy.maxStun;
         this.enemy.image= this.enemy.stunImg;

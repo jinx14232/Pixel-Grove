@@ -7,7 +7,9 @@ import {UI} from './UI.js';
 import {dog}from './dog.js';
 
 window.addEventListener('load',()=>{
-
+let startBtn= document.querySelector('#startBtn');
+startBtn.addEventListener('click',()=>{
+startBtn.style.display= 'none';
 let canvas= document.querySelector('#canvas');
 let cxt= canvas.getContext('2d');
 canvas.width= window.innerWidth;
@@ -19,7 +21,7 @@ class Game{
         this.speed= 0;
         this.width= width;
         this.height= height;
-        this.messages= ['. He\'s vulnerable, just roll !!!', '. Now\'s your chance, dodge and attack !!','. Careful! that might be deadly next time..','GAME OVER','You\'r Dead'];
+        this.messages= ['. He\'s vulnerable, just roll !!!', '. Now\'s your chance, dodge and attack !!','. Careful! that might be deadly next time..','GAME OVER','You\'re Dead', 'That dog can\'t turn!!'];
         this.bossMsgNo= 0;
         this.msgNo= 2;
         this.displayBossMsg= false;
@@ -34,7 +36,7 @@ class Game{
         this.enemies= [];
         this.enemyTimer= 0;
         this.enemyInterval= Math.random()*500+1000;
-        this.bossInterval= 1100;
+        this.bossInterval= 500;
         this.timer= 0;
         this.boss= [];
         this.arrival= false;
@@ -42,10 +44,23 @@ class Game{
         this.gameOver= false;
         this.shieldHealthDisplay= false;
         this.externalChange= false;
-       
+        //background sound
+        this.sound= new Audio();
+        this.sound.src= "sounds/background.mp3";
+        this.sound.loop= true;
+        this.maxTime1= 10;
+        this.maxTime2= 25;
+        this.maxTime= this.maxTime1;
+        this.currentTime= 0
+
+    }
+    audio(){
+         if(this.sound.currentTime> this.maxTime){
+            this.sound.currentTime= this.currentTime;
+           }
     }
     update(deltaTime){
-
+        
         this.timer++;
         this.background.update();
         this.player.update(deltaTime, this.input.keys);
@@ -53,10 +68,13 @@ class Game{
             this.enemyTimer= 0;
             this.addEnemy();
         }else if(this.enemyTimer> this.enemyInterval && this.timer> this.boss){
-            // this.boss.push(new Boss(this, this.player));
-            this.boss.push(new dog(this));
-
+            this.addBoss();
             this.arrival =true;
+            console.log("boss now");
+            this.maxTime= this.maxTime2;
+            this.currentTime= this.maxTime1;
+            this.sound.currentTime= this.maxTime1;
+            
         }else
             this.enemyTimer+= deltaTime;
         this.enemies.forEach(enemy=>{
@@ -69,28 +87,33 @@ class Game{
             this.boss[0].update(deltaTime);
             if(this.boss[0].complete){
                 this.arrival= false;
+                this.dogArrival= false;
                 this.boss= [];
                 this.timer= 0;
                 this.addHealth();
                 this.displayBossMsg= false;
                 this.player.boundary= this.player.spriteW;
+                this.maxTime= this.maxTime1;
+                this.currentTime= 0;
             }
         }
         if(this.paused){
-            this.speed=0;
-            this.shieldHealthDisplay= false;
-            this.UI.lifeReduction= false; 
-            this.UI.shieldY= 0;
-            this.UI.removeShield= false;
+            this.speed= 0;
+            if(this.shieldHealthDisplay){
+                this.shieldHealthDisplay= false;
+                this.UI.lifeReduction= false; 
+                this.UI.shieldY= 0;
+                this.UI.removeShield= false;
+            }
             this.displayBossMsg= false;
-            this.player.allowHit= true;
+            this.displayMsg= false;
 
         }
-        if(this.UI.framesY== 1 && this.lives>0){ //check for fall state
+        if(this.UI.framesY== 0 && this.lives>0){ //check for fall state
             this.chance= true;
             // this.player.hit= false;
             //for some reason gameover cant be true here so its in player 
-        }else if(this.UI.framesY== 0)  this.player.setState(6,0,document.querySelector('#die'));
+        }else if(this.UI.framesY== 0 && this.lives==0)  this.player.setState(6,0,document.querySelector('#die'));
         if(this.chance){ //activate fall state
             this.msgNo= 2;
             this.displayMsg= true;
@@ -144,6 +167,16 @@ class Game{
             }
         
     }
+    
+    addBoss(){
+        if(Math.random()<0.5){
+            this.boss.push(new Boss(this, this.player))
+        }else {
+            this.boss.push(new dog(this, this.player));
+            this.dogArrival= true;
+        }
+
+    }
     addHealth(){
         if((Math.random().toFixed(1)== 0.3 ||Math.random().toFixed(1)== 0.7 ||Math.random().toFixed(1)== 0.5) && this.lives<5) this.healthDisplay= true;
     }
@@ -151,19 +184,21 @@ class Game{
 }
 
 let game= new Game(canvas.width, canvas.height);
+game.sound.play();
 let lastTime= 0;
 console.log(game);
 
 function animate(timeStand){
     cxt.clearRect(0,0,canvas.width,canvas.height);
-    cxt.strokeStyle= 'rgba(0,0,0,0)';
+    cxt.strokeStyle= 'transparent';
     let deltaTime= timeStand- lastTime;
     lastTime= timeStand; 
     game.update(deltaTime);
     game.draw(cxt);
+    game.audio();
 
     if(!game.gameOver)requestAnimationFrame(animate);
 }
 animate(0);
-
+    });
 });

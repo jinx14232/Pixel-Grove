@@ -24,6 +24,11 @@ export class Player {
     this.currentState.enter();
     this.complete= false;
     this.allowHit= true;
+    //shield sound
+    this.sound= new Audio();
+    this.sound.src= "sounds/shield_touch.mp3";
+    //for making attack frame
+    this.attackNo3= false;
 
   }
   update(deltaTime, key) {
@@ -33,13 +38,14 @@ export class Player {
     if(this.game.lives== 0 || this.game.UI.framesY== 12) this.revival= false;
     else this.revival= true;
 
-     if (key.includes("ArrowLeft")) {
+    if (key.includes("ArrowLeft")) {
 
-       this.x-= 6;
+      if(this.currentState!= this.states[6] && this.currentState!= this.states[10] && this.currentState!= this.states[12] && !this.game.paused) this.x-= 6;
 
-    } else if (key.includes("ArrowRight") && this.game.speed!= 0) {
+    } else if (key.includes("ArrowRight")) {
 
-      this.x+= 6;
+      if(this.currentState== this.states[6] || this.currentState== this.states[8] || this.currentState== this.states[10] || this.currentState== this.states[12] || this.game.paused) this.x+= 0;
+      else this.x+= 6;
 
     } 
 
@@ -90,7 +96,8 @@ export class Player {
   }
   
   setState(stateNumber, speed, image){
-    this.image= image
+    this.image= image;
+    this.currentState.sound.pause();
     if(!this.game.paused) this.game.speed= speed;
     this.currentState= this.states[stateNumber];
     if(stateNumber== 10){ // for lives
@@ -119,6 +126,10 @@ export class Player {
 
          ){
             enemy.stunned= true;
+            if(this.currentState== this.states[9]||this.currentState== this.states[5]){
+              this.sound.currentTime= 0;
+              this.sound.play();
+            } 
          } else{
           if(this.allowHit){
             this.game.UI.framesY--;
@@ -129,7 +140,7 @@ export class Player {
       }
     });
     //for boss
-    if(this.game.arrival){
+    if(this.game.arrival && !this.game.dogArrival){
         if(this.bossCollision() && this.game.boss[0].currentState== this.game.boss[0].states[0]){ //for boss attack
             if(this.currentState!== this.states[2] &&
                 this.currentState!== this.states[5] &&
@@ -141,18 +152,24 @@ export class Player {
                 this.setState(8,0,document.querySelector('#hurt'));
               }
               }
+              if(this.currentState== this.states[5] ||
+                this.currentState== this.states[9]){
+                  this.sound.play();
+                  this.sound.currentTime= 0;
+                } 
         }
         if(this.bossCollision() && this.game.boss[0].currentState== this.game.boss[0].states[1]){ //for spell
-            if(this.currentState!== this.states[2]){
+          
+              if(this.currentState!== this.states[2]){
                 if(this.allowHit){
                   this.allowHit= false;
-                  this.game.externalChange= true;
+                  this.game.externalChange= true; // IF SPELL HITS WHEN SHIELDING
                     this.game.UI.framesY--;
                     this.setState(8,0,document.querySelector('#hurt'));
-                    this.gameOver= true;
                  }
               }
-        }
+          
+        }//boss hurt
         if((this.game.boss[0].idleX< this.x+ this.spriteW &&
            this.game.boss[0].idleX+ this.game.boss[0].idleW > this.x &&
            this.game.boss[0].idleY< this.y+ this.spriteH &&
@@ -160,11 +177,41 @@ export class Player {
            ) && this.game.boss[0].backupState== this.game.boss[0].states[4]){ //for attack collision co ordinats are different
             
             if(this.currentState== this.states[7]){
-                if(!this.game.boss[0].hit) this.game.boss[0].backupState= this.game.boss[0].states[3];  
-              }
-        }
+              if(this.game.boss[0].allowHit) {
+                  this.game.boss[0].backupState= this.game.boss[0].states[3];  
+                  this.game.boss[0].backupState.enter();
+                }
 
+            }
+
+        }
+        
     }
+    if(this.game.dogArrival){
+          if(this.game.boss[0].currentState== this.game.boss[0].states[1] && this.bossCollision()){
+            if(//hit 
+              this.currentState!= this.states[7]
+            ){
+              if(this.allowHit && (this.currentState!= this.states[2]&& this.currentState!= this.states[5]&& this.currentState!= this.states[7]&& this.currentState!= this.states[9])){
+                this.game.UI.framesY--;
+                this.allowHit= false;
+                this.setState(8,0,document.querySelector('#hurt'));
+              }
+              if(this.currentState== this.states[9]||this.currentState== this.states[5]){
+              this.sound.currentTime= 0;
+              this.sound.volume= 0.5;
+              this.sound.play();
+            } 
+            }
+            else{
+              
+              if(this.game.boss[0].allowHit) {
+                this.game.boss[0].allowHit= false;
+                this.game.boss[0].setState(3);
+              }
+            }
+          }
+        }
     //for life
     if(this.game.healthDisplay){
       if(
@@ -178,6 +225,7 @@ export class Player {
         this.game.UI.heartX= this.game.width;
     }
     }
+    
   }
   bossCollision(){
     return (this.game.boss[0].collisionX< this.x+ this.spriteW &&
