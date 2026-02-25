@@ -1,4 +1,4 @@
-# git statusPixel Groove
+# Pixel Groove
 <hr>
 This is a 2d side scrolling game made purly from Java script and HTML.
 <br>
