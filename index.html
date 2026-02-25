@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Serif+Display&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        #canvas{
+            width: 90vw;
+            height: 90vh;
+            /* max-width: 928px;
+            max-height: 793px; */
+            position: absolute;
+            transform: translate(-50%,-50%);
+            border: 2px solid;
+            top: 50%;
+            left: 50%;
+        }
+        img{
+            display: none;
+        }
+        body{
+            background-color:  black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <!-- layers -->
+    <img src="layers/l0.png" id="l0">
+    <img src="layers/l1.png" id="l1">
+    <img src="layers/l2.png" id="l2">
+    <img src="layers/l3.png" id="l3">
+    <img src="layers/l5.png" id="l5">
+    <img src="layers/l6.png" id="l6">
+    <img src="layers/l7.png" id="l7">
+    <img src="layers/l8.png" id="l8">
+    <img src="layers/l9.png" id="l9">
+    <img src="layers/l10.png" id="l10">
+    <img src="layers/l11.png" id="l11">
+    <img src="layers/l12.png" id="l12"> 
+
+    <!-- player -->
+
+    <img src="/Knight_player/Attack_KG_1.png" alt="" id="attack1">
+    <img src="/Knight_player/Attack_KG_2.png" alt="" id="attack2">
+    <img src="/Knight_player/Attack_KG_3.png" alt="" id="attack3">
+    <img src="/Knight_player/Attack_KG_4.png" alt="" id="attack4">
+    <img src="/Knight_player/Walking_KG_1.png" alt="" id="walk1">
+    <img src="/Knight_player/Drinking_KG_1.png" alt="" id="revive">
+    <img src="/Knight_player/Dying_KG_2.png" alt="" id="die">
+    <img src="/Knight_player/Crouching_KG_2.png" alt="" id="fall">
+    <img src="/Knight_player/Crouching_Idle_KG_2.png" alt="" id="fallStay">
+    <img src="/Knight_player/Hurt_KG_1.png" alt="" id="hurt">
+    <img src="/Knight_player/Idle_KG_2.png" alt="" id="idle">
+    <img src="/Knight_player/Idle_KG_1.png" alt="" id="idle1">
+    <img src="/Knight_player/Jump_KG_2.gif" alt="" id="jump">
+    <img src="/Knight_player/Landing_KG_2.png" alt="" id="land">
+    <img src="/Knight_player/Rolling_KG_1.png" alt="" id="roll">
+    <img src="/Knight_player/Walking_KG_2.png" alt="" id="walk">
+    <img src="/Knight_player/Shield_Up_KG_1.png" alt="" id="shield">
+    <img src="/Knight_player/Shield_idle_KG.png" alt="" id="hold">
+
+ 
+    <!-- enemies -->
+    <img src="Mushroom-Run.png" alt="" class="mushroom">
+    <img src="bat.png" alt="" id="bat">
+    <img src="Bat-hurt.png" alt="" id="stunBat">
+    <img src="Mushroom-Stun.png" alt="" id="stunImg">
+    
+    <img src="Attack/Bringer-of-Death_Attack_1.png" alt="" class="boss1">
+    <img src="Attack/Bringer-of-Death_Attack_2.png" alt="" class="boss2">
+    <img src="Attack/Bringer-of-Death_Attack_3.png" alt="" class="boss3">
+    <img src="Attack/Bringer-of-Death_Attack_4.png" alt="" class="boss4">
+    <img src="Attack/Bringer-of-Death_Attack_5.png" alt="" class="boss5">
+    <img src="Attack/Bringer-of-Death_Attack_6.png" alt="" class="boss6">
+    <img src="Attack/Bringer-of-Death_Attack_7.png" alt="" class="boss7">
+    <img src="Attack/Bringer-of-Death_Attack_8.png" alt="" class="boss8">
+    <img src="Attack/Bringer-of-Death_Attack_9.png" alt="" class="boss9">
+    <img src="Attack/Bringer-of-Death_Attack_10.png" alt="" class="boss10">
+
+   <img src="Spell/Bringer-of-Death_Spell_1.png" alt="" class="spell1">
+   <img src="Spell/Bringer-of-Death_Spell_2.png" alt="" class="spell2">
+   <img src="Spell/Bringer-of-Death_Spell_3.png" alt="" class="spell3">
+   <img src="Spell/Bringer-of-Death_Spell_4.png" alt="" class="spell4">
+   <img src="Spell/Bringer-of-Death_Spell_5.png" alt="" class="spell5">
+   <img src="Spell/Bringer-of-Death_Spell_6.png" alt="" class="spell6">
+   <img src="Spell/Bringer-of-Death_Spell_7.png" alt="" class="spell7">
+   <img src="Spell/Bringer-of-Death_Spell_8.png" alt="" class="spell8">
+   <img src="Spell/Bringer-of-Death_Spell_9.png" alt="" class="spell9">
+   <img src="Spell/Bringer-of-Death_Spell_10.png" alt="" class="spell10">
+   <img src="Spell/Bringer-of-Death_Spell_11.png" alt="" class="spell11">
+   <img src="Spell/Bringer-of-Death_Spell_12.png" alt="" class="spell12">
+   <img src="Spell/Bringer-of-Death_Spell_13.png" alt="" class="spell13">
+   <img src="Spell/Bringer-of-Death_Spell_16.png" alt="" class="spell14">
+   <img src="Spell/Bringer-of-Death_Spell_16.png" alt="" class="spell15">
+   <img src="Spell/Bringer-of-Death_Spell_13.png" alt="" class="spell16">
+
+   <img src="Cast/Bringer-of-Death_Cast_1.png" alt="" class="cast1">
+   <img src="Cast/Bringer-of-Death_Cast_2.png" alt="" class="cast2">
+   <img src="Cast/Bringer-of-Death_Cast_3.png" alt="" class="cast3">
+   <img src="Cast/Bringer-of-Death_Cast_4.png" alt="" class="cast4">
+   <img src="Cast/Bringer-of-Death_Cast_5.png" alt="" class="cast5">
+   <img src="Cast/Bringer-of-Death_Cast_6.png" alt="" class="cast6">
+   <img src="Cast/Bringer-of-Death_Cast_7.png" alt="" class="cast7">
+   <img src="Cast/Bringer-of-Death_Cast_8.png" alt="" class="cast8">
+   <img src="Cast/Bringer-of-Death_Cast_9.png" alt="" class="cast9">
+
+   <img src="Idle/Bringer-of-Death_Idle_1.png" alt="" class="idle1">
+   <img src="Idle/Bringer-of-Death_Idle_2.png" alt="" class="idle2">
+   <img src="Idle/Bringer-of-Death_Idle_3.png" alt="" class="idle3">
+   <img src="Idle/Bringer-of-Death_Idle_4.png" alt="" class="idle4">
+   <img src="Idle/Bringer-of-Death_Idle_5.png" alt="" class="idle5">
+   <img src="Idle/Bringer-of-Death_Idle_6.png" alt="" class="idle6">
+   <img src="Idle/Bringer-of-Death_Idle_7.png" alt="" class="idle7">
+   <img src="Idle/Bringer-of-Death_Idle_8.png" alt="" class="idle8">
+
+   <img src="Hurt/Bringer-of-Death_Hurt_1.png" alt="" class="hurt1">
+   <img src="Hurt/Bringer-of-Death_Hurt_2.png" alt="" class="hurt2">
+   <img src="Hurt/Bringer-of-Death_Hurt_3.png" alt="" class="hurt3">
+
+   <!-- //life -->
+    <img src="heart.png" class="heart" alt="">
+    <img src="border.png" class="border" alt="">
+    <img src="lifebar.png" class="lifebar" alt="">
+    <img src="shieldHealth.png" class="shieldHealth" alt="">
+    <!-- //dog -->
+     <img src="Massacre Sprite Sheet.png" class="dog">
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
